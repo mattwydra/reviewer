@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Review Form</title>
+    <title>Series Review Form</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,7 +38,7 @@
             transition: all 0.3s;
             width: 45%;
         }
-        .anime-btn {
+        .series-btn {
             background-color: #8e44ad;
             color: white;
         }
@@ -113,15 +113,15 @@
         <h1>My Review Collection</h1>
         
         <div class="top-buttons">
-            <button class="top-button anime-btn" id="animeButton">Anime Reviews</button>
+            <button class="top-button series-btn" id="seriesButton">Series Reviews</button>
             <button class="top-button game-btn" id="gameButton">Game Reviews</button>
         </div>
         
-        <div id="animeForm" class="visible">
-            <h2>New Anime Review</h2>
+        <div id="seriesForm" class="visible">
+            <h2>New Series Review</h2>
             <div class="form-group">
-                <label for="animeTitle">Anime Title:</label>
-                <input type="text" id="animeTitle" placeholder="Enter the anime title">
+                <label for="seriesTitle">Series Title:</label>
+                <input type="text" id="seriesTitle" placeholder="Enter the series title">
             </div>
             
             <div class="form-group">
@@ -181,12 +181,12 @@
             
             <div class="form-group">
                 <label for="synopsis">Synopsis:</label>
-                <textarea id="synopsis" placeholder="Brief description of the anime..."></textarea>
+                <textarea id="synopsis" placeholder="Brief description of the series..."></textarea>
             </div>
             
             <div class="form-group">
                 <label for="review">Your Review:</label>
-                <textarea id="review" placeholder="Your thoughts on the anime..."></textarea>
+                <textarea id="review" placeholder="Your thoughts on the series..."></textarea>
             </div>
             
             <div class="form-group">
@@ -209,43 +209,43 @@
                 <textarea id="recommendedFor" placeholder="What type of viewers would enjoy this?"></textarea>
             </div>
             
-            <button id="saveAnimeReview" class="btn">Generate Review Data</button>
-            <button id="copyAnimeReview" class="btn" style="margin-left: 10px; background-color: #2ecc71;">Copy to Clipboard</button>
-            <button id="downloadAnimeReview" class="btn" style="margin-left: 10px; background-color: #e67e22;">Download as JSON</button>
+            <button id="saveSeriesReview" class="btn">Generate Review Data</button>
+            <button id="copySeriesReview" class="btn" style="margin-left: 10px; background-color: #2ecc71;">Copy to Clipboard</button>
+            <button id="downloadSeriesReview" class="btn" style="margin-left: 10px; background-color: #e67e22;">Download as JSON</button>
             
             <div id="resultText"></div>
         </div>
         
         <div id="gameForm" class="hidden">
             <h2>Game Reviews Coming Soon!</h2>
-            <p>The game review form is under construction. Please use the anime review form for now.</p>
+            <p>The game review form is under construction. Please use the series review form for now.</p>
         </div>
     </div>
 
     <script>
         // Switch between forms
-        document.getElementById('animeButton').addEventListener('click', function() {
-            document.getElementById('animeForm').classList.add('visible');
-            document.getElementById('animeForm').classList.remove('hidden');
+        document.getElementById('seriesButton').addEventListener('click', function() {
+            document.getElementById('seriesForm').classList.add('visible');
+            document.getElementById('seriesForm').classList.remove('hidden');
             document.getElementById('gameForm').classList.add('hidden');
             document.getElementById('gameForm').classList.remove('visible');
-            document.getElementById('animeButton').style.opacity = "1";
+            document.getElementById('seriesButton').style.opacity = "1";
             document.getElementById('gameButton').style.opacity = "0.6";
         });
         
         document.getElementById('gameButton').addEventListener('click', function() {
             document.getElementById('gameForm').classList.add('visible');
             document.getElementById('gameForm').classList.remove('hidden');
-            document.getElementById('animeForm').classList.add('hidden');
-            document.getElementById('animeForm').classList.remove('visible');
+            document.getElementById('seriesForm').classList.add('hidden');
+            document.getElementById('seriesForm').classList.remove('visible');
             document.getElementById('gameButton').style.opacity = "1";
-            document.getElementById('animeButton').style.opacity = "0.6";
+            document.getElementById('seriesButton').style.opacity = "0.6";
         });
         
-        // Save anime review
-        document.getElementById('saveAnimeReview').addEventListener('click', function() {
-            const animeData = {
-                title: document.getElementById('animeTitle').value,
+        // Save series review
+        document.getElementById('saveSeriesReview').addEventListener('click', function() {
+            const seriesData = {
+                title: document.getElementById('seriesTitle').value,
                 releaseYear: document.getElementById('releaseYear').value,
                 genre: document.getElementById('genre').value,
                 episodes: document.getElementById('episodes').value,
@@ -267,12 +267,12 @@
             
             // Display the result
             const resultElement = document.getElementById('resultText');
-            resultElement.textContent = JSON.stringify(animeData, null, 2);
+            resultElement.textContent = JSON.stringify(seriesData, null, 2);
             resultElement.style.display = 'block';
         });
         
         // Copy to clipboard
-        document.getElementById('copyAnimeReview').addEventListener('click', function() {
+        document.getElementById('copySeriesReview').addEventListener('click', function() {
             const resultText = document.getElementById('resultText').textContent;
             if (resultText) {
                 navigator.clipboard.writeText(resultText)
@@ -284,11 +284,11 @@
         });
         
         // Download as JSON
-        document.getElementById('downloadAnimeReview').addEventListener('click', function() {
+        document.getElementById('downloadSeriesReview').addEventListener('click', function() {
             const resultText = document.getElementById('resultText').textContent;
             if (resultText) {
-                const animeData = JSON.parse(resultText);
-                const fileName = animeData.title.replace(/\s+/g, '_').toLowerCase() + '_review.json';
+                const seriesData = JSON.parse(resultText);
+                const fileName = seriesData.title.replace(/\s+/g, '_').toLowerCase() + '_review.json';
                 
                 const blob = new Blob([resultText], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
