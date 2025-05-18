@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Review Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #8e44ad;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .top-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .top-button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 45%;
+        }
+        .anime-btn {
+            background-color: #8e44ad;
+            color: white;
+        }
+        .game-btn {
+            background-color: #3498db;
+            color: white;
+            opacity: 0.6;
+        }
+        .top-button:hover {
+            transform: translateY(-3px);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .rating-group {
+            display: flex;
+            align-items: center;
+        }
+        .rating-group input {
+            width: 60px;
+            margin-right: 10px;
+        }
+        .btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #7d32a8;
+        }
+        #resultText {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Review Collection</h1>
+        
+        <div class="top-buttons">
+            <button class="top-button anime-btn" id="animeButton">Anime Reviews</button>
+            <button class="top-button game-btn" id="gameButton">Game Reviews</button>
+        </div>
+        
+        <div id="animeForm" class="visible">
+            <h2>New Anime Review</h2>
+            <div class="form-group">
+                <label for="animeTitle">Anime Title:</label>
+                <input type="text" id="animeTitle" placeholder="Enter the anime title">
+            </div>
+            
+            <div class="form-group">
+                <label for="releaseYear">Release Year:</label>
+                <input type="number" id="releaseYear" placeholder="When was it released?">
+            </div>
+            
+            <div class="form-group">
+                <label for="genre">Genre(s):</label>
+                <input type="text" id="genre" placeholder="e.g., Action, Romance, Fantasy">
+            </div>
+            
+            <div class="form-group">
+                <label for="episodes">Number of Episodes:</label>
+                <input type="number" id="episodes" placeholder="How many episodes?">
+            </div>
+            
+            <div class="form-group">
+                <label for="storyRating">Story Rating (1-10):</label>
+                <div class="rating-group">
+                    <input type="number" id="storyRating" min="1" max="10" placeholder="1-10">
+                    <span>/ 10</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="animationRating">Animation Rating (1-10):</label>
+                <div class="rating-group">
+                    <input type="number" id="animationRating" min="1" max="10" placeholder="1-10">
+                    <span>/ 10</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="characterRating">Character Rating (1-10):</label>
+                <div class="rating-group">
+                    <input type="number" id="characterRating" min="1" max="10" placeholder="1-10">
+                    <span>/ 10</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="soundtrackRating">Soundtrack Rating (1-10):</label>
+                <div class="rating-group">
+                    <input type="number" id="soundtrackRating" min="1" max="10" placeholder="1-10">
+                    <span>/ 10</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="overallRating">Overall Rating (1-10):</label>
+                <div class="rating-group">
+                    <input type="number" id="overallRating" min="1" max="10" placeholder="1-10">
+                    <span>/ 10</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="synopsis">Synopsis:</label>
+                <textarea id="synopsis" placeholder="Brief description of the anime..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="review">Your Review:</label>
+                <textarea id="review" placeholder="Your thoughts on the anime..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="favoriteCharacter">Favorite Character(s) and Why:</label>
+                <textarea id="favoriteCharacter" placeholder="Who was your favorite character and why?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="favoriteScene">Favorite Scene(s):</label>
+                <textarea id="favoriteScene" placeholder="Which scenes stood out to you?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="weakPoints">Weak Points:</label>
+                <textarea id="weakPoints" placeholder="What could have been improved?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendedFor">Recommended For:</label>
+                <textarea id="recommendedFor" placeholder="What type of viewers would enjoy this?"></textarea>
+            </div>
+            
+            <button id="saveAnimeReview" class="btn">Generate Review Data</button>
+            <button id="copyAnimeReview" class="btn" style="margin-left: 10px; background-color: #2ecc71;">Copy to Clipboard</button>
+            <button id="downloadAnimeReview" class="btn" style="margin-left: 10px; background-color: #e67e22;">Download as JSON</button>
+            
+            <div id="resultText"></div>
+        </div>
+        
+        <div id="gameForm" class="hidden">
+            <h2>Game Reviews Coming Soon!</h2>
+            <p>The game review form is under construction. Please use the anime review form for now.</p>
+        </div>
+    </div>
+
+    <script>
+        // Switch between forms
+        document.getElementById('animeButton').addEventListener('click', function() {
+            document.getElementById('animeForm').classList.add('visible');
+            document.getElementById('animeForm').classList.remove('hidden');
+            document.getElementById('gameForm').classList.add('hidden');
+            document.getElementById('gameForm').classList.remove('visible');
+            document.getElementById('animeButton').style.opacity = "1";
+            document.getElementById('gameButton').style.opacity = "0.6";
+        });
+        
+        document.getElementById('gameButton').addEventListener('click', function() {
+            document.getElementById('gameForm').classList.add('visible');
+            document.getElementById('gameForm').classList.remove('hidden');
+            document.getElementById('animeForm').classList.add('hidden');
+            document.getElementById('animeForm').classList.remove('visible');
+            document.getElementById('gameButton').style.opacity = "1";
+            document.getElementById('animeButton').style.opacity = "0.6";
+        });
+        
+        // Save anime review
+        document.getElementById('saveAnimeReview').addEventListener('click', function() {
+            const animeData = {
+                title: document.getElementById('animeTitle').value,
+                releaseYear: document.getElementById('releaseYear').value,
+                genre: document.getElementById('genre').value,
+                episodes: document.getElementById('episodes').value,
+                ratings: {
+                    story: document.getElementById('storyRating').value,
+                    animation: document.getElementById('animationRating').value,
+                    characters: document.getElementById('characterRating').value,
+                    soundtrack: document.getElementById('soundtrackRating').value,
+                    overall: document.getElementById('overallRating').value
+                },
+                synopsis: document.getElementById('synopsis').value,
+                review: document.getElementById('review').value,
+                favoriteCharacter: document.getElementById('favoriteCharacter').value,
+                favoriteScene: document.getElementById('favoriteScene').value,
+                weakPoints: document.getElementById('weakPoints').value,
+                recommendedFor: document.getElementById('recommendedFor').value,
+                dateAdded: new Date().toISOString()
+            };
+            
+            // Display the result
+            const resultElement = document.getElementById('resultText');
+            resultElement.textContent = JSON.stringify(animeData, null, 2);
+            resultElement.style.display = 'block';
+        });
+        
+        // Copy to clipboard
+        document.getElementById('copyAnimeReview').addEventListener('click', function() {
+            const resultText = document.getElementById('resultText').textContent;
+            if (resultText) {
+                navigator.clipboard.writeText(resultText)
+                    .then(() => alert('Review data copied to clipboard!'))
+                    .catch(err => console.error('Failed to copy: ', err));
+            } else {
+                alert('Generate the review data first!');
+            }
+        });
+        
+        // Download as JSON
+        document.getElementById('downloadAnimeReview').addEventListener('click', function() {
+            const resultText = document.getElementById('resultText').textContent;
+            if (resultText) {
+                const animeData = JSON.parse(resultText);
+                const fileName = animeData.title.replace(/\s+/g, '_').toLowerCase() + '_review.json';
+                
+                const blob = new Blob([resultText], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                alert('Generate the review data first!');
+            }
+        });
+    </script>
+</body>
+</html>
