@@ -7,7 +7,8 @@
     <title>Anime Review Poster Generator</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+            font-family: 'Helvetica Neue Condensed Bold', Helvetica, Arial, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -310,11 +311,25 @@
             padding-top: 1rem;
         }
 
-        /* Poster aspect ratio */
+        /* Add or modify these styles in your <style> section */
         .poster-container {
             width: 100%;
             aspect-ratio: 2/3;
             max-height: 800px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        #generatedPoster {
+            display: none;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #posterContainer {
+            max-width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* Button disabled state */
@@ -493,6 +508,7 @@
     <script>
         // Global variables to store state
         let animeData = null;
+        let characterData = [];
         let reviewData = null;
         let posterGenerated = false;
         let loading = false;
@@ -507,7 +523,6 @@
         const generatedPoster = document.getElementById('generatedPoster');
         const downloadPosterBtn = document.getElementById('downloadPosterBtn');
 
-        // Function to search anime using Jikan API
         async function searchAnime() {
             const animeTitle = animeTitleInput.value.trim();
             if (!animeTitle) return;
@@ -522,10 +537,21 @@
 
             try {
                 const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(animeTitle)}&limit=1`);
-                const data = await response.json();
+                const searchResult = await response.json();
 
-                if (data.data && data.data.length > 0) {
-                    animeData = data.data[0];
+                if (searchResult.data && searchResult.data.length > 0) {
+                    animeData = searchResult.data[0];
+
+                    // ✅ Fetch characters and voice actors
+                    try {
+                        const characterRes = await fetch(`https://api.jikan.moe/v4/anime/${animeData.mal_id}/characters`);
+                        const characterJson = await characterRes.json();
+                        characterData = characterJson.data || [];
+                    } catch (charErr) {
+                        console.error("Failed to load characters:", charErr);
+                        characterData = [];
+                    }
+
                     loadReviewData();
                     displayAnimePreview();
                     generatePosterBtn.disabled = false;
@@ -544,6 +570,7 @@
                 searchAnimeBtn.disabled = false;
             }
         }
+
 
         // Function to load review data from local storage
         function loadReviewData() {
@@ -595,64 +622,75 @@
 
             posterGenerated = true;
 
-            // Update the poster container style to use light gray background
+            // Update the poster container style
             const posterContainer = document.getElementById('posterContainer');
             posterContainer.className = "w-full relative rounded-lg poster-container";
             posterContainer.style.backgroundColor = "#e6e6e6"; // Light gray background
             posterContainer.style.display = "flex";
             posterContainer.style.flexDirection = "column";
             posterContainer.style.padding = "0";
-            posterContainer.style.fontFamily = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+            posterContainer.style.fontFamily = "'Helvetica Neue Condensed Bold', Helvetica, Arial, sans-serif";
+            posterContainer.style.maxWidth = "100%";
+            posterContainer.style.overflow = "hidden";
 
             // Clear any existing content
             posterContainer.innerHTML = '';
 
-            // Create image container
+            // Create image container with proper constraint
             const imageContainer = document.createElement('div');
             imageContainer.style.width = "100%";
-            imageContainer.style.height = "65%"; // Image takes approximately 65% of poster height
+            imageContainer.style.height = "auto";
+            imageContainer.style.maxHeight = "60%";
+            imageContainer.style.overflow = "hidden";
 
-            // Create and append image
+            // Create and append image with proper sizing
             const animeImage = document.createElement('img');
             animeImage.src = animeData.images?.jpg?.large_image_url || "/api/placeholder/400/600";
             animeImage.alt = animeData.title;
             animeImage.style.width = "100%";
-            animeImage.style.height = "100%";
             animeImage.style.objectFit = "cover";
+            animeImage.style.objectPosition = "center";
+            animeImage.style.aspectRatio = "1 / 1"; // Makes it a square
+
             imageContainer.appendChild(animeImage);
 
-            // Create info container
+            // Create info container with proper constraints
             const infoContainer = document.createElement('div');
-            infoContainer.style.padding = "30px 40px";
+            infoContainer.style.padding = "20px";
             infoContainer.style.color = "#333";
+            infoContainer.style.width = "100%";
+            infoContainer.style.boxSizing = "border-box";
 
             // Add title in large, bold, uppercase font
             const titleElement = document.createElement('h1');
-            titleElement.style.fontSize = "42px";
-            titleElement.style.fontWeight = "900";
+            titleElement.style.fontFamily = "'Helvetica Neue Condensed Bold', Helvetica, Arial, sans-serif";
+            titleElement.style.fontWeight = "700";
+            titleElement.style.fontSize = "36px";
+            titleElement.style.letterSpacing = "0px";  // more spaced
+
             titleElement.style.textTransform = "uppercase";
-            titleElement.style.letterSpacing = "2px";
             titleElement.style.margin = "0 0 5px 0";
-            titleElement.style.lineHeight = "1";
+            titleElement.style.lineHeight = "1.2";
+            titleElement.style.color = "black";
             titleElement.textContent = animeData.title;
             infoContainer.appendChild(titleElement);
 
-            // Add year in larger font next to title
-            const yearElement = document.createElement('span');
-            yearElement.style.fontSize = "26px";
-            yearElement.style.fontWeight = "300";
-            yearElement.style.margin = "0 0 25px 0";
-            yearElement.style.display = "inline-block";
+            // Add year in more subdued font
+            const yearElement = document.createElement('div');
+            yearElement.style.fontSize = "20px";
+            yearElement.style.fontWeight = "400";
+            yearElement.style.margin = "0 0 20px 0";
+            yearElement.style.color = "#444";
             yearElement.textContent = animeData.year || '????';
             infoContainer.appendChild(yearElement);
 
             // Create a container for the genre
             const genreContainer = document.createElement('div');
-            genreContainer.style.margin = "25px 0 10px 0";
+            genreContainer.style.margin = "15px 0 10px 0";
 
             // Add "genre" label
             const genreLabel = document.createElement('div');
-            genreLabel.style.fontSize = "16px";
+            genreLabel.style.fontSize = "14px";
             genreLabel.style.color = "#666";
             genreLabel.style.fontWeight = "400";
             genreLabel.style.marginBottom = "4px";
@@ -661,21 +699,20 @@
 
             // Add genres in uppercase with spacing
             const genresValue = document.createElement('div');
-            genresValue.style.fontSize = "16px";
-            genresValue.style.fontWeight = "400";
+            genresValue.style.fontSize = "14px";
+            genresValue.style.fontWeight = "500";
             genresValue.style.textTransform = "uppercase";
-            genresValue.style.letterSpacing = "1px";
-            genresValue.style.wordSpacing = "10px";
+            genresValue.style.letterSpacing = "0px";
             genresValue.textContent = animeData.genres?.map(g => g.name).join('   ') || 'UNKNOWN';
             genreContainer.appendChild(genresValue);
             infoContainer.appendChild(genreContainer);
 
             // Add "directed by" section
             const directorContainer = document.createElement('div');
-            directorContainer.style.margin = "15px 0 0 0";
+            directorContainer.style.margin = "10px 0 0 0";
 
             const directorLabel = document.createElement('div');
-            directorLabel.style.fontSize = "16px";
+            directorLabel.style.fontSize = "14px";
             directorLabel.style.color = "#666";
             directorLabel.style.fontWeight = "400";
             directorLabel.textContent = "directed by";
@@ -683,20 +720,20 @@
 
             const director = animeData.producers?.length > 0 ? animeData.producers[0].name : 'UNKNOWN';
             const directorValue = document.createElement('div');
-            directorValue.style.fontSize = "16px";
-            directorValue.style.fontWeight = "400";
+            directorValue.style.fontSize = "14px";
+            directorValue.style.fontWeight = "500";
             directorValue.style.textTransform = "uppercase";
-            directorValue.style.letterSpacing = "1px";
+            directorValue.style.letterSpacing = "0px";
             directorValue.textContent = director;
             directorContainer.appendChild(directorValue);
             infoContainer.appendChild(directorContainer);
 
             // Add "produced by" section
             const producersContainer = document.createElement('div');
-            producersContainer.style.margin = "15px 0 0 0";
+            producersContainer.style.margin = "10px 0 0 0";
 
             const producersLabel = document.createElement('div');
-            producersLabel.style.fontSize = "16px";
+            producersLabel.style.fontSize = "14px";
             producersLabel.style.color = "#666";
             producersLabel.style.fontWeight = "400";
             producersLabel.textContent = "produced by";
@@ -704,41 +741,55 @@
 
             const producers = animeData.studios?.map(s => s.name).join('   ') || 'UNKNOWN';
             const producersValue = document.createElement('div');
-            producersValue.style.fontSize = "16px";
-            producersValue.style.fontWeight = "400";
+            producersValue.style.fontSize = "14px";
+            producersValue.style.fontWeight = "500";
             producersValue.style.textTransform = "uppercase";
-            producersValue.style.letterSpacing = "1px";
-            producersValue.style.wordSpacing = "10px";
-            producersValue.style.lineHeight = "1.5";
+            producersValue.style.letterSpacing = "0px";
             producersValue.textContent = producers;
             producersContainer.appendChild(producersValue);
             infoContainer.appendChild(producersContainer);
 
-            // Add "starring" section with Japanese title or voice actors if available
-            if (animeData.title_japanese) {
+            // Add "starring" section with top voice actors
+            if (characterData.length > 0) {
                 const starringContainer = document.createElement('div');
-                starringContainer.style.margin = "25px 0 0 0";
+                starringContainer.style.margin = "10px 0 0 0";
 
                 const starringLabel = document.createElement('div');
-                starringLabel.style.fontSize = "16px";
+                starringLabel.style.fontSize = "14px";
                 starringLabel.style.color = "#666";
                 starringLabel.style.fontWeight = "400";
+                // starringLabel.style.textTransform = "uppercase";
                 starringLabel.textContent = "starring";
                 starringContainer.appendChild(starringLabel);
 
-                // Get voice actors if available, or use Japanese title
-                let starring = '';
-                if (animeData.title_japanese) {
-                    starring = animeData.title_japanese;
-                }
-
                 const starringValue = document.createElement('div');
-                starringValue.style.fontSize = "16px";
-                starringValue.style.fontWeight = "400";
-                starringValue.style.textTransform = "uppercase";
-                starringValue.style.letterSpacing = "1px";
-                starringValue.style.wordSpacing = "10px";
+                starringValue.style.fontSize = "14px";
+                starringValue.style.fontWeight = "500";
+
+                const starring = characterData
+                    .filter(c => c.voice_actors && c.voice_actors.length > 0)
+                    .filter(c => c.voice_actors.some(v => v.language === "Japanese"))
+                    .slice(0, 3)
+                    .map(c => {
+                        const va = c.voice_actors.find(v => v.language === "Japanese");
+                        if (!va?.person?.name) return '';
+
+                        const [last, first] = va.person.name.split(',').map(s => s.trim());
+                        const fullName = last && first ? `${last.toUpperCase()} ${first.toUpperCase()}` : va.person.name.toUpperCase();
+                        return fullName;
+                    })
+                    .filter(Boolean)
+                    .join('     '); // <-- this is 6 real non-breaking spaces
+
+
+
                 starringValue.textContent = starring;
+                starringValue.transform = "scaleY(1.7)";
+                starringValue.transform = "origin: center";
+                starringValue.style.fontSize = "14px";
+                starringValue.style.fontWeight = "500";
+                starringValue.style.textTransform = "uppercase";
+                starringValue.style.letterSpacing = "0px";
                 starringContainer.appendChild(starringValue);
                 infoContainer.appendChild(starringContainer);
             }
@@ -757,10 +808,11 @@
                 quoteOverlay.style.justifyContent = "center";
                 quoteOverlay.style.padding = "20px";
                 quoteOverlay.style.background = "rgba(0,0,0,0.5)";
+                quoteOverlay.style.boxSizing = "border-box";
 
                 const quoteText = document.createElement('p');
                 quoteText.style.color = "white";
-                quoteText.style.fontSize = "24px";
+                quoteText.style.fontSize = "20px";
                 quoteText.style.fontWeight = "bold";
                 quoteText.style.textAlign = "center";
                 quoteText.style.textShadow = "1px 1px 3px rgba(0,0,0,0.8)";
