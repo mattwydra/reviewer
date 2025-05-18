@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Review Collection</title>
+    <title>Series Review Collection</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,7 +38,7 @@
             transition: all 0.3s;
             width: 45%;
         }
-        .anime-btn {
+        .series-btn {
             background-color: #8e44ad;
             color: white;
         }
@@ -276,23 +276,23 @@
         <h1>My Review Collection</h1>
         
         <div class="top-buttons">
-            <button class="top-button anime-btn" id="animeButton">Anime Reviews</button>
+            <button class="top-button series-btn" id="seriesButton">Series Reviews</button>
             <button class="top-button game-btn" id="gameButton">Game Reviews</button>
         </div>
         
-        <div id="animeCollection" class="visible">
-            <div class="upload-area" id="animeUploadArea">
+        <div id="seriesCollection" class="visible">
+            <div class="upload-area" id="seriesUploadArea">
                 <p>Drop JSON review files here or click to upload</p>
-                <input type="file" id="animeFileInput" multiple accept=".json">
+                <input type="file" id="seriesFileInput" multiple accept=".json">
             </div>
             
             <div class="controls">
                 <div class="search-box">
-                    <input type="text" id="animeSearch" placeholder="Search reviews...">
+                    <input type="text" id="seriesSearch" placeholder="Search reviews...">
                 </div>
                 <div class="sort-box">
-                    <label for="animeSort">Sort by:</label>
-                    <select id="animeSort">
+                    <label for="seriesSort">Sort by:</label>
+                    <select id="seriesSort">
                         <option value="title">Title</option>
                         <option value="rating">Rating (High to Low)</option>
                         <option value="year">Year (Newest First)</option>
@@ -302,114 +302,114 @@
             </div>
             
             <div class="action-buttons">
-                <button id="createAnimeReview" class="btn">Create New Review</button>
+                <button id="createSeriesReview" class="btn">Create New Review</button>
                 <button id="exportAllBtn" class="btn">Export All Reviews</button>
                 <button id="clearAllBtn" class="btn">Clear All Reviews</button>
             </div>
             
-            <div id="animeReviewGrid" class="review-grid">
+            <div id="seriesReviewGrid" class="review-grid">
                 <!-- Review cards will be generated here -->
             </div>
         </div>
         
         <div id="gameCollection" class="hidden">
             <h2>Game Reviews Coming Soon!</h2>
-            <p>The game review collection feature is under construction. Please use the anime review collection for now.</p>
+            <p>The game review collection feature is under construction. Please use the series review collection for now.</p>
         </div>
     </div>
     
-    <!-- Anime Review Modal -->
-    <div id="animeModal" class="modal">
+    <!-- Series Review Modal -->
+    <div id="seriesModal" class="modal">
         <div class="modal-content">
-            <span id="closeAnimeModal" class="close">&times;</span>
+            <span id="closeSeriesModal" class="close">&times;</span>
             
             <div class="modal-header">
-                <h2 id="modalAnimeTitle" class="modal-title">Anime Title</h2>
-                <div id="modalAnimeYear" class="modal-meta">Released: 2023 · 24 episodes</div>
-                <div id="modalAnimeGenre" class="modal-genre">Action, Adventure, Fantasy</div>
+                <h2 id="modalSeriesTitle" class="modal-title">Series Title</h2>
+                <div id="modalSeriesYear" class="modal-meta">Released: 2023 · 24 episodes</div>
+                <div id="modalSeriesGenre" class="modal-genre">Action, Adventure, Fantasy</div>
             </div>
             
             <div class="ratings-grid">
                 <div class="rating-item">
-                    <div id="modalAnimeOverall" class="rating-value">9.0</div>
+                    <div id="modalSeriesOverall" class="rating-value">9.0</div>
                     <div class="rating-label">Overall</div>
                 </div>
                 <div class="rating-item">
-                    <div id="modalAnimeStory" class="rating-value">8.5</div>
+                    <div id="modalSeriesStory" class="rating-value">8.5</div>
                     <div class="rating-label">Story</div>
                 </div>
                 <div class="rating-item">
-                    <div id="modalAnimeAnimation" class="rating-value">9.5</div>
+                    <div id="modalSeriesAnimation" class="rating-value">9.5</div>
                     <div class="rating-label">Animation</div>
                 </div>
                 <div class="rating-item">
-                    <div id="modalAnimeCharacters" class="rating-value">9.0</div>
+                    <div id="modalSeriesCharacters" class="rating-value">9.0</div>
                     <div class="rating-label">Characters</div>
                 </div>
                 <div class="rating-item">
-                    <div id="modalAnimeSoundtrack" class="rating-value">8.5</div>
+                    <div id="modalSeriesSoundtrack" class="rating-value">8.5</div>
                     <div class="rating-label">Soundtrack</div>
                 </div>
             </div>
             
             <div class="modal-section">
                 <h3>Synopsis</h3>
-                <p id="modalAnimeSynopsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
+                <p id="modalSeriesSynopsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
             </div>
             
             <div class="modal-section">
                 <h3>Review</h3>
-                <p id="modalAnimeReview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
+                <p id="modalSeriesReview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
             </div>
             
             <div class="modal-section">
                 <h3>Favorite Character(s)</h3>
-                <p id="modalAnimeFavCharacter">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p id="modalSeriesFavCharacter">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
             
             <div class="modal-section">
                 <h3>Favorite Scene(s)</h3>
-                <p id="modalAnimeFavScene">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p id="modalSeriesFavScene">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
             
             <div class="modal-section">
                 <h3>Weak Points</h3>
-                <p id="modalAnimeWeakPoints">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p id="modalSeriesWeakPoints">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
             
             <div class="modal-section">
                 <h3>Recommended For</h3>
-                <p id="modalAnimeRecommended">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p id="modalSeriesRecommended">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Store anime reviews in an array
-        let animeReviews = [];
+        // Store series reviews in an array
+        let seriesReviews = [];
         
         // Switch between collections
-        document.getElementById('animeButton').addEventListener('click', function() {
-            document.getElementById('animeCollection').classList.add('visible');
-            document.getElementById('animeCollection').classList.remove('hidden');
+        document.getElementById('seriesButton').addEventListener('click', function() {
+            document.getElementById('seriesCollection').classList.add('visible');
+            document.getElementById('seriesCollection').classList.remove('hidden');
             document.getElementById('gameCollection').classList.add('hidden');
             document.getElementById('gameCollection').classList.remove('visible');
-            document.getElementById('animeButton').style.opacity = "1";
+            document.getElementById('seriesButton').style.opacity = "1";
             document.getElementById('gameButton').style.opacity = "0.6";
         });
         
         document.getElementById('gameButton').addEventListener('click', function() {
             document.getElementById('gameCollection').classList.add('visible');
             document.getElementById('gameCollection').classList.remove('hidden');
-            document.getElementById('animeCollection').classList.add('hidden');
-            document.getElementById('animeCollection').classList.remove('visible');
+            document.getElementById('seriesCollection').classList.add('hidden');
+            document.getElementById('seriesCollection').classList.remove('visible');
             document.getElementById('gameButton').style.opacity = "1";
-            document.getElementById('animeButton').style.opacity = "0.6";
+            document.getElementById('seriesButton').style.opacity = "0.6";
         });
         
         // Handle file uploads
-        const uploadArea = document.getElementById('animeUploadArea');
-        const fileInput = document.getElementById('animeFileInput');
+        const uploadArea = document.getElementById('seriesUploadArea');
+        const fileInput = document.getElementById('seriesFileInput');
         
         uploadArea.addEventListener('click', function() {
             fileInput.click();
@@ -450,21 +450,21 @@
                             const reviewData = JSON.parse(e.target.result);
                             
                             // Check if review is already in the collection
-                            const existingIndex = animeReviews.findIndex(r => r.title === reviewData.title);
+                            const existingIndex = seriesReviews.findIndex(r => r.title === reviewData.title);
                             
                             if (existingIndex >= 0) {
                                 // Ask for confirmation to overwrite
                                 if (confirm(`Review for "${reviewData.title}" already exists. Do you want to replace it?`)) {
-                                    animeReviews[existingIndex] = reviewData;
+                                    seriesReviews[existingIndex] = reviewData;
                                 }
                             } else {
-                                animeReviews.push(reviewData);
+                                seriesReviews.push(reviewData);
                                 newReviewsCount++;
                             }
                             
                             // Save to localStorage and display reviews
                             saveReviews();
-                            displayAnimeReviews();
+                            displaySeriesReviews();
                         } catch (error) {
                             console.error('Error parsing JSON file:', error);
                             alert('Error parsing JSON file. Please make sure it is valid JSON.');
@@ -481,20 +481,20 @@
         
         // Save reviews to localStorage
         function saveReviews() {
-            localStorage.setItem('animeReviews', JSON.stringify(animeReviews));
+            localStorage.setItem('seriesReviews', JSON.stringify(seriesReviews));
         }
         
-        // Display anime reviews
-        function displayAnimeReviews() {
-            const grid = document.getElementById('animeReviewGrid');
-            const searchTerm = document.getElementById('animeSearch').value.toLowerCase();
-            const sortOption = document.getElementById('animeSort').value;
+        // Display series reviews
+        function displaySeriesReviews() {
+            const grid = document.getElementById('seriesReviewGrid');
+            const searchTerm = document.getElementById('seriesSearch').value.toLowerCase();
+            const sortOption = document.getElementById('seriesSort').value;
             
             // Clear the grid
             grid.innerHTML = '';
             
             // Filter reviews based on search
-            const filteredReviews = animeReviews.filter(review => {
+            const filteredReviews = seriesReviews.filter(review => {
                 return review.title.toLowerCase().includes(searchTerm) || 
                        review.genre.toLowerCase().includes(searchTerm) ||
                        review.synopsis.toLowerCase().includes(searchTerm);
@@ -530,7 +530,7 @@
                     </div>
                 `;
                 
-                card.addEventListener('click', () => openAnimeModal(review));
+                card.addEventListener('click', () => openSeriesModal(review));
                 grid.appendChild(card);
             });
         }
@@ -551,74 +551,74 @@
             }
         }
         
-        // Open anime modal with review details
-        function openAnimeModal(review) {
-            const modal = document.getElementById('animeModal');
+        // Open series modal with review details
+        function openSeriesModal(review) {
+            const modal = document.getElementById('seriesModal');
             
             // Fill in modal content
-            document.getElementById('modalAnimeTitle').textContent = review.title;
-            document.getElementById('modalAnimeYear').textContent = `Released: ${review.releaseYear} · ${review.episodes} episodes`;
-            document.getElementById('modalAnimeGenre').textContent = review.genre;
+            document.getElementById('modalSeriesTitle').textContent = review.title;
+            document.getElementById('modalSeriesYear').textContent = `Released: ${review.releaseYear} · ${review.episodes} episodes`;
+            document.getElementById('modalSeriesGenre').textContent = review.genre;
             
-            document.getElementById('modalAnimeOverall').textContent = review.ratings.overall;
-            document.getElementById('modalAnimeStory').textContent = review.ratings.story;
-            document.getElementById('modalAnimeAnimation').textContent = review.ratings.animation;
-            document.getElementById('modalAnimeCharacters').textContent = review.ratings.characters;
-            document.getElementById('modalAnimeSoundtrack').textContent = review.ratings.soundtrack;
+            document.getElementById('modalSeriesOverall').textContent = review.ratings.overall;
+            document.getElementById('modalSeriesStory').textContent = review.ratings.story;
+            document.getElementById('modalSeriesAnimation').textContent = review.ratings.animation;
+            document.getElementById('modalSeriesCharacters').textContent = review.ratings.characters;
+            document.getElementById('modalSeriesSoundtrack').textContent = review.ratings.soundtrack;
             
-            document.getElementById('modalAnimeSynopsis').textContent = review.synopsis;
-            document.getElementById('modalAnimeReview').textContent = review.review;
-            document.getElementById('modalAnimeFavCharacter').textContent = review.favoriteCharacter;
-            document.getElementById('modalAnimeFavScene').textContent = review.favoriteScene;
-            document.getElementById('modalAnimeWeakPoints').textContent = review.weakPoints;
-            document.getElementById('modalAnimeRecommended').textContent = review.recommendedFor;
+            document.getElementById('modalSeriesSynopsis').textContent = review.synopsis;
+            document.getElementById('modalSeriesReview').textContent = review.review;
+            document.getElementById('modalSeriesFavCharacter').textContent = review.favoriteCharacter;
+            document.getElementById('modalSeriesFavScene').textContent = review.favoriteScene;
+            document.getElementById('modalSeriesWeakPoints').textContent = review.weakPoints;
+            document.getElementById('modalSeriesRecommended').textContent = review.recommendedFor;
             
             // Show the modal
             modal.style.display = 'block';
         }
         
-        // Close anime modal
-        document.getElementById('closeAnimeModal').addEventListener('click', function() {
-            document.getElementById('animeModal').style.display = 'none';
+        // Close series modal
+        document.getElementById('closeSeriesModal').addEventListener('click', function() {
+            document.getElementById('seriesModal').style.display = 'none';
         });
         
         // Close modal when clicking outside
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('animeModal');
+            const modal = document.getElementById('seriesModal');
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
         });
         
         // Search functionality
-        document.getElementById('animeSearch').addEventListener('input', function() {
-            displayAnimeReviews();
+        document.getElementById('seriesSearch').addEventListener('input', function() {
+            displaySeriesReviews();
         });
         
         // Sort functionality
-        document.getElementById('animeSort').addEventListener('change', function() {
-            displayAnimeReviews();
+        document.getElementById('seriesSort').addEventListener('change', function() {
+            displaySeriesReviews();
         });
         
         // Open the create new review page in a new tab
-        document.getElementById('createAnimeReview').addEventListener('click', function() {
-            window.open('anime_review_form.html', '_blank');
+        document.getElementById('createSeriesReview').addEventListener('click', function() {
+            window.open('series_review_form.html', '_blank');
         });
         
         // Export all reviews
         document.getElementById('exportAllBtn').addEventListener('click', function() {
-            if (animeReviews.length === 0) {
+            if (seriesReviews.length === 0) {
                 alert('No reviews to export!');
                 return;
             }
             
-            const allReviewsJson = JSON.stringify(animeReviews, null, 2);
+            const allReviewsJson = JSON.stringify(seriesReviews, null, 2);
             const blob = new Blob([allReviewsJson], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'all_anime_reviews.json';
+            a.download = 'all_series_reviews.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -627,31 +627,31 @@
         
         // Clear all reviews
         document.getElementById('clearAllBtn').addEventListener('click', function() {
-            if (animeReviews.length === 0) {
+            if (seriesReviews.length === 0) {
                 alert('No reviews to clear!');
                 return;
             }
             
             if (confirm('Are you sure you want to delete ALL reviews? This cannot be undone!')) {
-                animeReviews = [];
+                seriesReviews = [];
                 saveReviews();
-                displayAnimeReviews();
+                displaySeriesReviews();
                 alert('All reviews have been cleared!');
             }
         });
         
         // Load saved reviews from localStorage on page load
         window.addEventListener('DOMContentLoaded', function() {
-            const savedAnimeReviews = localStorage.getItem('animeReviews');
-            if (savedAnimeReviews) {
+            const savedSeriesReviews = localStorage.getItem('seriesReviews');
+            if (savedSeriesReviews) {
                 try {
-                    animeReviews = JSON.parse(savedAnimeReviews);
-                    displayAnimeReviews();
+                    seriesReviews = JSON.parse(savedSeriesReviews);
+                    displaySeriesReviews();
                 } catch(error) {
                     console.error('Error loading saved reviews:', error);
                 }
             } else {
-                displayAnimeReviews(); // Show empty state
+                displaySeriesReviews(); // Show empty state
             }
         });
     </script>
