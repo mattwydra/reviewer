@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Review Collection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #8e44ad;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .top-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .top-button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 45%;
+        }
+        .anime-btn {
+            background-color: #8e44ad;
+            color: white;
+        }
+        .game-btn {
+            background-color: #3498db;
+            color: white;
+            opacity: 0.6;
+        }
+        .top-button:hover {
+            transform: translateY(-3px);
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .search-box {
+            flex: 1;
+            max-width: 300px;
+            margin-right: 20px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .sort-box {
+            display: flex;
+            align-items: center;
+        }
+        .sort-box label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .sort-box select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .upload-area {
+            border: 2px dashed #8e44ad;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area:hover {
+            background-color: #f8f4fc;
+        }
+        .upload-area p {
+            margin: 0;
+            font-size: 16px;
+            color: #8e44ad;
+        }
+        .upload-area input {
+            display: none;
+        }
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .review-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .review-title {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            color: #8e44ad;
+        }
+        .review-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .review-rating {
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px 0;
+            color: #777;
+        }
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close:hover {
+            color: #333;
+        }
+        .modal-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .modal-title {
+            font-size: 28px;
+            color: #8e44ad;
+            margin: 0;
+        }
+        .modal-meta {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+        .modal-genre {
+            margin-top: 8px;
+            color: #2980b9;
+            font-size: 16px;
+        }
+        .ratings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .rating-item {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        .rating-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .rating-label {
+            font-size: 14px;
+            color: #666;
+        }
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        .modal-section h3 {
+            font-size: 20px;
+            color: #8e44ad;
+            margin-bottom: 10px;
+        }
+        .modal-section p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        .btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #7d32a8;
+        }
+        #exportAllBtn {
+            background-color: #2ecc71;
+            margin-left: 10px;
+        }
+        #clearAllBtn {
+            background-color: #e74c3c;
+            margin-left: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Review Collection</h1>
+        
+        <div class="top-buttons">
+            <button class="top-button anime-btn" id="animeButton">Anime Reviews</button>
+            <button class="top-button game-btn" id="gameButton">Game Reviews</button>
+        </div>
+        
+        <div id="animeCollection" class="visible">
+            <div class="upload-area" id="animeUploadArea">
+                <p>Drop JSON review files here or click to upload</p>
+                <input type="file" id="animeFileInput" multiple accept=".json">
+            </div>
+            
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="animeSearch" placeholder="Search reviews...">
+                </div>
+                <div class="sort-box">
+                    <label for="animeSort">Sort by:</label>
+                    <select id="animeSort">
+                        <option value="title">Title</option>
+                        <option value="rating">Rating (High to Low)</option>
+                        <option value="year">Year (Newest First)</option>
+                        <option value="added">Date Added (Newest First)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="createAnimeReview" class="btn">Create New Review</button>
+                <button id="exportAllBtn" class="btn">Export All Reviews</button>
+                <button id="clearAllBtn" class="btn">Clear All Reviews</button>
+            </div>
+            
+            <div id="animeReviewGrid" class="review-grid">
+                <!-- Review cards will be generated here -->
+            </div>
+        </div>
+        
+        <div id="gameCollection" class="hidden">
+            <h2>Game Reviews Coming Soon!</h2>
+            <p>The game review collection feature is under construction. Please use the anime review collection for now.</p>
+        </div>
+    </div>
+    
+    <!-- Anime Review Modal -->
+    <div id="animeModal" class="modal">
+        <div class="modal-content">
+            <span id="closeAnimeModal" class="close">&times;</span>
+            
+            <div class="modal-header">
+                <h2 id="modalAnimeTitle" class="modal-title">Anime Title</h2>
+                <div id="modalAnimeYear" class="modal-meta">Released: 2023 · 24 episodes</div>
+                <div id="modalAnimeGenre" class="modal-genre">Action, Adventure, Fantasy</div>
+            </div>
+            
+            <div class="ratings-grid">
+                <div class="rating-item">
+                    <div id="modalAnimeOverall" class="rating-value">9.0</div>
+                    <div class="rating-label">Overall</div>
+                </div>
+                <div class="rating-item">
+                    <div id="modalAnimeStory" class="rating-value">8.5</div>
+                    <div class="rating-label">Story</div>
+                </div>
+                <div class="rating-item">
+                    <div id="modalAnimeAnimation" class="rating-value">9.5</div>
+                    <div class="rating-label">Animation</div>
+                </div>
+                <div class="rating-item">
+                    <div id="modalAnimeCharacters" class="rating-value">9.0</div>
+                    <div class="rating-label">Characters</div>
+                </div>
+                <div class="rating-item">
+                    <div id="modalAnimeSoundtrack" class="rating-value">8.5</div>
+                    <div class="rating-label">Soundtrack</div>
+                </div>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Synopsis</h3>
+                <p id="modalAnimeSynopsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Review</h3>
+                <p id="modalAnimeReview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Favorite Character(s)</h3>
+                <p id="modalAnimeFavCharacter">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Favorite Scene(s)</h3>
+                <p id="modalAnimeFavScene">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Weak Points</h3>
+                <p id="modalAnimeWeakPoints">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Recommended For</h3>
+                <p id="modalAnimeRecommended">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store anime reviews in an array
+        let animeReviews = [];
+        
+        // Switch between collections
+        document.getElementById('animeButton').addEventListener('click', function() {
+            document.getElementById('animeCollection').classList.add('visible');
+            document.getElementById('animeCollection').classList.remove('hidden');
+            document.getElementById('gameCollection').classList.add('hidden');
+            document.getElementById('gameCollection').classList.remove('visible');
+            document.getElementById('animeButton').style.opacity = "1";
+            document.getElementById('gameButton').style.opacity = "0.6";
+        });
+        
+        document.getElementById('gameButton').addEventListener('click', function() {
+            document.getElementById('gameCollection').classList.add('visible');
+            document.getElementById('gameCollection').classList.remove('hidden');
+            document.getElementById('animeCollection').classList.add('hidden');
+            document.getElementById('animeCollection').classList.remove('visible');
+            document.getElementById('gameButton').style.opacity = "1";
+            document.getElementById('animeButton').style.opacity = "0.6";
+        });
+        
+        // Handle file uploads
+        const uploadArea = document.getElementById('animeUploadArea');
+        const fileInput = document.getElementById('animeFileInput');
+        
+        uploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#f8f4fc';
+        });
+        
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.style.backgroundColor = '';
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '';
+            
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+        
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+        
+        function handleFiles(files) {
+            let newReviewsCount = 0;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (file.type === 'application/json' || file.name.endsWith('.json')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        try {
+                            const reviewData = JSON.parse(e.target.result);
+                            
+                            // Check if review is already in the collection
+                            const existingIndex = animeReviews.findIndex(r => r.title === reviewData.title);
+                            
+                            if (existingIndex >= 0) {
+                                // Ask for confirmation to overwrite
+                                if (confirm(`Review for "${reviewData.title}" already exists. Do you want to replace it?`)) {
+                                    animeReviews[existingIndex] = reviewData;
+                                }
+                            } else {
+                                animeReviews.push(reviewData);
+                                newReviewsCount++;
+                            }
+                            
+                            // Save to localStorage and display reviews
+                            saveReviews();
+                            displayAnimeReviews();
+                        } catch (error) {
+                            console.error('Error parsing JSON file:', error);
+                            alert('Error parsing JSON file. Please make sure it is valid JSON.');
+                        }
+                    };
+                    
+                    reader.readAsText(file);
+                }
+            }
+            
+            // Reset the file input
+            fileInput.value = '';
+        }
+        
+        // Save reviews to localStorage
+        function saveReviews() {
+            localStorage.setItem('animeReviews', JSON.stringify(animeReviews));
+        }
+        
+        // Display anime reviews
+        function displayAnimeReviews() {
+            const grid = document.getElementById('animeReviewGrid');
+            const searchTerm = document.getElementById('animeSearch').value.toLowerCase();
+            const sortOption = document.getElementById('animeSort').value;
+            
+            // Clear the grid
+            grid.innerHTML = '';
+            
+            // Filter reviews based on search
+            const filteredReviews = animeReviews.filter(review => {
+                return review.title.toLowerCase().includes(searchTerm) || 
+                       review.genre.toLowerCase().includes(searchTerm) ||
+                       review.synopsis.toLowerCase().includes(searchTerm);
+            });
+            
+            // Sort reviews
+            const sortedReviews = sortReviews(filteredReviews, sortOption);
+            
+            // Show empty state if no reviews
+            if (sortedReviews.length === 0) {
+                grid.innerHTML = `
+                <div class="empty-state">
+                    <h3>No reviews found</h3>
+                    <p>Upload some JSON review files or create new reviews to get started.</p>
+                </div>`;
+                return;
+            }
+            
+            // Create review cards
+            sortedReviews.forEach(review => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.dataset.reviewId = review.title; // Using title as ID
+                
+                card.innerHTML = `
+                    <div class="review-header">
+                        <h3 class="review-title">${review.title}</h3>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-year">${review.releaseYear}</div>
+                        <div class="review-genre">${review.genre}</div>
+                        <div class="review-rating">${review.ratings.overall}/10</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => openAnimeModal(review));
+                grid.appendChild(card);
+            });
+        }
+        
+        // Sort reviews based on the selected option
+        function sortReviews(reviews, sortOption) {
+            switch(sortOption) {
+                case 'title':
+                    return reviews.sort((a, b) => a.title.localeCompare(b.title));
+                case 'rating':
+                    return reviews.sort((a, b) => parseFloat(b.ratings.overall) - parseFloat(a.ratings.overall));
+                case 'year':
+                    return reviews.sort((a, b) => parseInt(b.releaseYear) - parseInt(a.releaseYear));
+                case 'added':
+                    return reviews.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                default:
+                    return reviews;
+            }
+        }
+        
+        // Open anime modal with review details
+        function openAnimeModal(review) {
+            const modal = document.getElementById('animeModal');
+            
+            // Fill in modal content
+            document.getElementById('modalAnimeTitle').textContent = review.title;
+            document.getElementById('modalAnimeYear').textContent = `Released: ${review.releaseYear} · ${review.episodes} episodes`;
+            document.getElementById('modalAnimeGenre').textContent = review.genre;
+            
+            document.getElementById('modalAnimeOverall').textContent = review.ratings.overall;
+            document.getElementById('modalAnimeStory').textContent = review.ratings.story;
+            document.getElementById('modalAnimeAnimation').textContent = review.ratings.animation;
+            document.getElementById('modalAnimeCharacters').textContent = review.ratings.characters;
+            document.getElementById('modalAnimeSoundtrack').textContent = review.ratings.soundtrack;
+            
+            document.getElementById('modalAnimeSynopsis').textContent = review.synopsis;
+            document.getElementById('modalAnimeReview').textContent = review.review;
+            document.getElementById('modalAnimeFavCharacter').textContent = review.favoriteCharacter;
+            document.getElementById('modalAnimeFavScene').textContent = review.favoriteScene;
+            document.getElementById('modalAnimeWeakPoints').textContent = review.weakPoints;
+            document.getElementById('modalAnimeRecommended').textContent = review.recommendedFor;
+            
+            // Show the modal
+            modal.style.display = 'block';
+        }
+        
+        // Close anime modal
+        document.getElementById('closeAnimeModal').addEventListener('click', function() {
+            document.getElementById('animeModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('animeModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Search functionality
+        document.getElementById('animeSearch').addEventListener('input', function() {
+            displayAnimeReviews();
+        });
+        
+        // Sort functionality
+        document.getElementById('animeSort').addEventListener('change', function() {
+            displayAnimeReviews();
+        });
+        
+        // Open the create new review page in a new tab
+        document.getElementById('createAnimeReview').addEventListener('click', function() {
+            window.open('anime_review_form.html', '_blank');
+        });
+        
+        // Export all reviews
+        document.getElementById('exportAllBtn').addEventListener('click', function() {
+            if (animeReviews.length === 0) {
+                alert('No reviews to export!');
+                return;
+            }
+            
+            const allReviewsJson = JSON.stringify(animeReviews, null, 2);
+            const blob = new Blob([allReviewsJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'all_anime_reviews.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+        // Clear all reviews
+        document.getElementById('clearAllBtn').addEventListener('click', function() {
+            if (animeReviews.length === 0) {
+                alert('No reviews to clear!');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete ALL reviews? This cannot be undone!')) {
+                animeReviews = [];
+                saveReviews();
+                displayAnimeReviews();
+                alert('All reviews have been cleared!');
+            }
+        });
+        
+        // Load saved reviews from localStorage on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedAnimeReviews = localStorage.getItem('animeReviews');
+            if (savedAnimeReviews) {
+                try {
+                    animeReviews = JSON.parse(savedAnimeReviews);
+                    displayAnimeReviews();
+                } catch(error) {
+                    console.error('Error loading saved reviews:', error);
+                }
+            } else {
+                displayAnimeReviews(); // Show empty state
+            }
+        });
+    </script>
+</body>
+</html>
